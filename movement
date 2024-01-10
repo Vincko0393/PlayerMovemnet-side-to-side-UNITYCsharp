@@ -1,0 +1,37 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class PlayerController : MonoBehaviour
+{
+    public float horizontalInput; // Horizontal input
+    public float speed = 10.0f;   // Player's movement speed
+    public float xRange = 10.0f;  // The maximum X range to keep the player within bounds
+    public GameObject projectilePrefab; // The projectile prefab to instantiate
+
+    void Update()
+    {
+        horizontalInput = Input.GetAxis("Horizontal"); // Get horizontal input from the keyboard
+
+        // Move the player left and right based on horizontal input and speed
+        transform.Translate(Vector3.right * horizontalInput * speed * Time.deltaTime);
+
+        // Keep the player in bounds
+        if (transform.position.x < -xRange) // Check if the player's X position is less than the negative X range
+        {
+            // Set the player's position to the negative X range limit with the original Y and Z values
+            transform.position = new Vector3(-xRange, transform.position.y, transform.position.z);
+        }
+        else if (transform.position.x > xRange) // Check if the player's X position is greater than the X range
+        {
+            // Set the player's position to the X range limit with the original Y and Z values
+            transform.position = new Vector3(xRange, transform.position.y, transform.position.z);
+        }
+
+        // Instantiate the projectile when the space bar is pressed
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            Instantiate(projectilePrefab, transform.position, projectilePrefab.transform.rotation);
+        }
+    }
+}
